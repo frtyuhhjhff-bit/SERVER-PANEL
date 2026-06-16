@@ -502,7 +502,7 @@
             <div class="double-row">
                 <div class="input-group">
                     <label>🔑 كلمة سر التفعيل</label>
-                    <input type="text" id="adminPassword" placeholder="كلمة سر البوت" value="X1R_RAGNAR">
+                    <input type="text" id="adminPassword" placeholder="كلمة سر البوت" value="BOT_KEY">
                 </div>
                 <div class="input-group">
                     <label>👥 الحد الأقصى للمستخدمين</label>
@@ -645,7 +645,7 @@
             const data = await apiCall('/api/get-user-data', { username: currentUser });
             if (data) {
                 document.getElementById('botToken').value = data.token || '';
-                document.getElementById('adminPassword').value = data.admin_password || 'X1R_RAGNAR';
+                document.getElementById('adminPassword').value = data.admin_password || 'BOT_KEY';
                 document.getElementById('maxUsers').value = data.max_users || 100;
                 document.getElementById('activeUsersCount').innerText = data.active_users || 0;
                 document.getElementById('groupsCount').innerText = data.groups_count || 0;

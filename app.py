@@ -41,8 +41,8 @@ os.makedirs(DATA_DIR, exist_ok=True)
 app = Flask(__name__)
 app.secret_key = os.environ.get("PANEL_SECRET_KEY", "CHANGE_ME_" + os.urandom(16).hex())
 
-ADMIN_USERNAME = os.environ.get("ADMIN_USER", "admin")
-ADMIN_PASSWORD = os.environ.get("ADMIN_PASS", "admin")
+ADMIN_USERNAME = os.environ.get("ADMIN_USER", "STRAVEX")
+ADMIN_PASSWORD = os.environ.get("ADMIN_PASS", "STRAVEX_KEY_PRO_YT")
 ADMIN_SECRET_CODE = "STRAVEX2025"
 
 # ========== تحميل وحفظ البيانات ==========
@@ -798,7 +798,7 @@ def api_register():
         "active": True,
         "is_pro": is_pro,
         "telegram_token": "",
-        "admin_password": "X1R_RAGNAR",
+        "admin_password": "BOT_KEY",
         "max_users": 100,
         "active_users": 0,
         "owner_id": "",
@@ -904,7 +904,7 @@ def bot_runner_data():
         users.append({
             "username": u.get("username"),
             "token": u.get("telegram_token", ""),
-            "admin_password": u.get("admin_password", "X1R_RAGNAR"),
+            "admin_password": u.get("admin_password", "BOT_KEY"),
             "max_users": u.get("max_users", 100),
             "is_active": u.get("active", True),
             "active_users": u.get("active_users", 0),
