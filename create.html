@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+    <title>STRAVEX - إنشاء حساب</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #0a0a2a 0%, #0a2a3a 50%, #0a1a2a 100%);
+            font-family: 'Cairo', 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: twinkle 3s infinite;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 0.8; }
+        }
+        .container {
+            max-width: 500px;
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(0, 20, 40, 0.7);
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 200, 0, 0.3);
+        }
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #ffcc00, #00aaff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 10px;
+        }
+        .sub {
+            color: #88ddff;
+            font-size: 0.9rem;
+        }
+        .card {
+            background: rgba(0, 20, 40, 0.7);
+            backdrop-filter: blur(15px);
+            border-radius: 24px;
+            padding: 30px;
+            border: 1px solid rgba(255, 200, 0, 0.3);
+        }
+        .card h3 {
+            color: #ffdd55;
+            font-size: 1.4rem;
+            margin-bottom: 25px;
+            text-align: center;
+            border-bottom: 2px solid rgba(255, 200, 0, 0.3);
+            padding-bottom: 12px;
+        }
+        .free-key-info {
+            background: linear-gradient(135deg, #00aa00, #006600);
+            text-align: center;
+            padding: 12px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+        }
+        .free-key-info span {
+            color: white;
+            font-weight: bold;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        input {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(0, 20, 40, 0.8);
+            border: 1px solid #00aaff;
+            border-radius: 16px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+        }
+        input:focus {
+            border-color: #ffcc00;
+            box-shadow: 0 0 10px rgba(255, 200, 0, 0.3);
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #00aaff, #0088cc);
+            border: none;
+            border-radius: 40px;
+            color: white;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.05);
+        }
+        .switch {
+            text-align: center;
+            margin-top: 20px;
+            color: #ffcc00;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .switch:hover {
+            text-decoration: underline;
+        }
+        .contact {
+            text-align: center;
+            font-size: 0.7rem;
+            margin-top: 15px;
+            color: #88aaff;
+        }
+        .contact strong {
+            color: #ffcc00;
+        }
+        .message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            border-radius: 12px;
+            z-index: 1000;
+        }
+        .success {
+            background: rgba(0, 212, 255, 0.2);
+            border: 1px solid #00d4ff;
+            color: #00d4ff;
+        }
+        .error {
+            background: rgba(255, 0, 0, 0.2);
+            border: 1px solid red;
+            color: red;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 200, 0, 0.2);
+            color: #88aaff;
+            font-size: 0.7rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+
+    <div class="container">
+        <div class="header">
+            <h1>STRAVEX PANEL</h1>
+            <p class="sub">نظام متكامل لإدارة بوتات فري فاير</p>
+        </div>
+
+        <div class="card">
+            <h3>📝 إنشاء حساب جديد</h3>
+            <div class="free-key-info"><span>🎁 التسجيل مجاني تماماً!</span></div>
+            <div class="input-group">
+                <input type="text" id="regUsername" placeholder="اسم المستخدم">
+            </div>
+            <div class="input-group">
+                <input type="password" id="regPassword" placeholder="كلمة السر">
+            </div>
+            <div class="input-group">
+                <input type="text" id="regKey" placeholder="مفتاح PRO (اختياري)">
+            </div>
+            <button onclick="register()">تسجيل</button>
+            <div class="switch" onclick="location.href='/login'">لديك حساب؟ سجل دخول</div>
+            <div class="contact">💡 يمكنك التسجيل مجاناً، ثم استخدام مفتاح PRO للترقية</div>
+        </div>
+
+        <div class="footer">
+            👨‍💻 STRAVEX | تواصل: <strong>TELEGRAM :@STRAVEX_vib</strong>
+        </div>
+    </div>
+
+    <script>
+        function generateStars() {
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 150; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = Math.random() * 3 + 'px';
+                star.style.height = star.style.width;
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+        generateStars();
+
+        function showMessage(msg, type) {
+            const d = document.createElement('div');
+            d.className = `message ${type}`;
+            d.innerText = msg;
+            document.body.appendChild(d);
+            setTimeout(() => d.remove(), 3000);
+        }
+
+        async function register() {
+            const username = document.getElementById('regUsername').value.trim();
+            const password = document.getElementById('regPassword').value.trim();
+            const key = document.getElementById('regKey').value.trim().toUpperCase();
+            
+            if(!username || !password) {
+                showMessage('❌ يرجى إدخال اسم المستخدم وكلمة السر', 'error');
+                return;
+            }
+            
+            showMessage('⏳ جاري التسجيل...', 'success');
+            
+            try {
+                const res = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ username, password, key: key || 'FREE-KEY' })
+                });
+                const data = await res.json();
+                
+                if(data.success) {
+                    if(key && key !== 'FREE-KEY') {
+                        showMessage('✅ تم التسجيل والترقية إلى PRO بنجاح', 'success');
+                    } else {
+                        showMessage('✅ تم التسجيل بنجاح (نسخة مجانية)', 'success');
+                    }
+                    setTimeout(() => location.href = '/login', 1500);
+                } else {
+                    showMessage(data.error || 'فشل التسجيل', 'error');
+                }
+            } catch(e) {
+                showMessage('خطأ في الاتصال بالخادم', 'error');
+            }
+        }
+    </script>
+</body>
+</html>

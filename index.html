@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>STRAVEX PRO - لوحة التحكم</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #0a1a3a 0%, #030e1f 100%);
+            font-family: 'Cairo', sans-serif;
+            color: #eef5ff;
+            padding: 1rem;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 150, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 150, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .dashboard-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* الشريط العلوي */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 30, 55, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 180, 255, 0.25);
+            border-radius: 20px;
+            padding: 0.5rem 1.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .logo-icon {
+            font-size: 1.5rem;
+            color: #00aaff;
+        }
+        .logo-text {
+            font-size: 1.1rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00aaff, #7b61ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .nav-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        .nav-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(0, 170, 255, 0.3);
+            padding: 6px 14px;
+            border-radius: 30px;
+            color: #ccdeff;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .nav-btn:hover {
+            background: #00aaff20;
+            border-color: #00aaff;
+            color: white;
+        }
+
+        /* البطاقات الأربعة - أفقية في جميع الشاشات */
+        .horizontal-cards {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+        }
+        .hor-card {
+            flex: 0 0 240px;
+            background: rgba(15, 35, 60, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 170, 255, 0.25);
+            border-radius: 16px;
+            padding: 0.8rem;
+            transition: 0.2s;
+        }
+        .hor-card:hover {
+            border-color: #00aaff;
+            transform: translateY(-2px);
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 0.8rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(0, 170, 255, 0.2);
+        }
+        .card-header i {
+            font-size: 1.2rem;
+            color: #00aaff;
+        }
+        .card-header h3 {
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.4rem;
+            font-size: 0.7rem;
+        }
+        .stat-label {
+            color: #8aa3c0;
+        }
+        .stat-value {
+            font-weight: 700;
+            color: #eef5ff;
+        }
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 0.6rem;
+            font-weight: 700;
+        }
+        .status-online {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+            border: 1px solid #00ff88;
+        }
+        .status-offline {
+            background: rgba(255, 77, 77, 0.2);
+            color: #ff4d4d;
+            border: 1px solid #ff4d4d;
+        }
+        .status-warning {
+            background: rgba(255, 170, 0, 0.2);
+            color: #ffaa00;
+            border: 1px solid #ffaa00;
+        }
+        .pro-badge {
+            background: linear-gradient(135deg, #ffcc00, #ff8800);
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 0.6rem;
+            color: #1a1a2a;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .likes-input-group {
+            display: flex;
+            gap: 5px;
+            margin: 8px 0;
+        }
+        .likes-input-group input {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 170, 255, 0.4);
+            padding: 5px 8px;
+            border-radius: 20px;
+            color: white;
+            font-family: monospace;
+            font-size: 0.7rem;
+        }
+        .likes-btn {
+            background: linear-gradient(135deg, #00aaff, #0066aa);
+            border: none;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.7rem;
+            cursor: pointer;
+        }
+        .log-list {
+            max-height: 120px;
+            overflow-y: auto;
+            font-size: 0.6rem;
+            font-family: monospace;
+        }
+        .log-item {
+            padding: 3px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            color: #88aaff;
+        }
+        .log-time {
+            color: #00aaff;
+            margin-left: 5px;
+        }
+        .settings-card {
+            background: rgba(15, 35, 60, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 170, 255, 0.25);
+            border-radius: 16px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+        .input-group {
+            margin-bottom: 0.8rem;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 0.2rem;
+            font-size: 0.7rem;
+            color: #8aa3c0;
+        }
+        .input-group input, .input-group textarea {
+            width: 100%;
+            padding: 0.5rem 0.8rem;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(0, 170, 255, 0.3);
+            border-radius: 12px;
+            color: white;
+            font-family: inherit;
+            font-size: 0.8rem;
+        }
+        /* الصف المزدوج للخانتين */
+        .double-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 0.8rem;
+        }
+        .double-row .input-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #00aaff, #0066aa);
+            color: white;
+        }
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+        .message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 18px;
+            border-radius: 12px;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+            font-size: 0.8rem;
+        }
+        .message-success {
+            background: rgba(0, 255, 136, 0.2);
+            border: 1px solid #00ff88;
+            color: #00ff88;
+        }
+        .message-error {
+            background: rgba(255, 77, 77, 0.2);
+            border: 1px solid #ff4d4d;
+            color: #ff4d4d;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* أزرار المطورين */
+        .dev-buttons-section {
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+        .dev-btn-youtube {
+            background: linear-gradient(135deg, #FF0000, #CC0000);
+            border: none;
+            width: 100%;
+            padding: 10px;
+            border-radius: 50px;
+            color: white;
+            font-weight: bold;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-bottom: 8px;
+            text-decoration: none;
+        }
+        .dev-btn-youtube:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255,0,0,0.3);
+        }
+        .dev-btn-telegram {
+            background: linear-gradient(135deg, #0088cc, #006699);
+            border: none;
+            width: 100%;
+            padding: 10px;
+            border-radius: 50px;
+            color: white;
+            font-weight: bold;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-bottom: 8px;
+            text-decoration: none;
+        }
+        .dev-btn-telegram:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0,136,204,0.3);
+        }
+        .helper-btn {
+            background: #1a1f2e;
+            border: 1px solid rgba(255,215,0,0.3);
+            width: 100%;
+            padding: 8px;
+            border-radius: 50px;
+            color: #FFD700;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-bottom: 6px;
+            text-decoration: none;
+        }
+        .helper-btn:hover {
+            background: #252a3a;
+            color: #FFD700;
+            border-color: #FFD700;
+        }
+        .section-title {
+            color: #FFD700;
+            font-size: 0.7rem;
+            margin: 10px 0 8px 0;
+            text-align: center;
+        }
+
+        /* تخصيص شريط التمرير الأفقي */
+        .horizontal-cards::-webkit-scrollbar {
+            height: 4px;
+        }
+        .horizontal-cards::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+        .horizontal-cards::-webkit-scrollbar-thumb {
+            background: #00aaff;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- الشريط العلوي -->
+        <div class="navbar">
+            <div class="logo-area">
+                <i class="fas fa-robot logo-icon"></i>
+                <span class="logo-text">STRAVEX PRO</span>
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="location.href='/admin'">
+                    <i class="fas fa-crown"></i> ADMIN
+                </button>
+                <button class="nav-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> خروج
+                </button>
+            </div>
+        </div>
+
+        <!-- 4 بطاقات أفقية - تبقى أفقية في جميع الشاشات -->
+        <div class="horizontal-cards">
+            <!-- 1. نظام التليجرام -->
+            <div class="hor-card">
+                <div class="card-header">
+                    <i class="fab fa-telegram"></i>
+                    <h3>نظام التليجرام</h3>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">حالة البوت:</span>
+                    <span class="stat-value" id="botStatusText">🟢 جاري...</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">المستخدمون:</span>
+                    <span class="stat-value" id="activeUsersCount">0</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">المجموعات:</span>
+                    <span class="stat-value" id="groupsCount">0</span>
+                </div>
+            </div>
+
+            <!-- 2. نظام اللايكات -->
+            <div class="hor-card">
+                <div class="card-header">
+                    <i class="fas fa-thumbs-up"></i>
+                    <h3>نظام اللايكات</h3>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">حالة الخادم:</span>
+                    <span class="stat-value" id="likesApiStatus">🟢 فحص...</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">إعجابات اليوم:</span>
+                    <span class="stat-value" id="likesSentToday">0</span>
+                </div>
+                <div class="likes-input-group">
+                    <input type="text" id="playerId" placeholder="معرف اللاعب" dir="ltr">
+                    <button class="likes-btn" onclick="sendLikes()" id="sendLikesBtn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                <div id="likesMsg" style="font-size: 0.6rem; color: #88aaff;"></div>
+            </div>
+
+            <!-- 3. سجلات النظام -->
+            <div class="hor-card">
+                <div class="card-header">
+                    <i class="fas fa-history"></i>
+                    <h3>سجلات النظام</h3>
+                </div>
+                <div class="log-list" id="logsList">
+                    <div class="log-item">📋 جاري التحميل...</div>
+                </div>
+            </div>
+
+            <!-- 4. ترقية PRO -->
+            <div class="hor-card" id="proCard">
+                <div class="card-header">
+                    <i class="fas fa-gem"></i>
+                    <h3>ترقية PRO</h3>
+                </div>
+                <div id="proContent">
+                    <div class="stat-row">
+                        <span class="stat-label">⭐ حالتك:</span>
+                        <span class="stat-value"><span class="status-badge status-warning"><i class="fas fa-gem"></i> مجاني</span></span>
+                    </div>
+                    <div class="input-group" style="margin-top:5px;">
+                        <input type="text" id="proKeyInput" placeholder="مفتاح PRO" style="padding:4px 8px; font-size:0.7rem;">
+                        <button class="btn-primary" style="width:100%; margin-top:4px; padding:4px; font-size:0.65rem;" onclick="upgradeWithKey()">تفعيل</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- إعدادات البوت (أسفل الصفحة) -->
+        <div class="settings-card">
+            <div class="card-header" style="margin-bottom: 0.8rem;">
+                <i class="fas fa-sliders-h"></i>
+                <h3>⚙️ إعدادات البوت</h3>
+            </div>
+            <div class="input-group">
+                <label>🤖 توكن البوت (من @BotFather)</label>
+                <input type="text" id="botToken" placeholder="أدخل توكن البوت">
+            </div>
+            
+            <!-- الصف الأول: خانتين صغيرة جنب بعض -->
+            <div class="double-row">
+                <div class="input-group">
+                    <label>🔑 كلمة سر التفعيل</label>
+                    <input type="text" id="adminPassword" placeholder="كلمة سر البوت" value="X1R_RAGNAR">
+                </div>
+                <div class="input-group">
+                    <label>👥 الحد الأقصى للمستخدمين</label>
+                    <input type="number" id="maxUsers" placeholder="100" value="100">
+                </div>
+            </div>
+
+            <!-- الصف الثاني: خانتين تحت الأولى وبنفس الحجم -->
+            <div class="double-row">
+                <div class="input-group">
+                    <label>🆔 ايدي المطور</label>
+                    <input type="text" id="ownerId" placeholder="ايدي المطور">
+                </div>
+                <div class="input-group">
+                    <label>📛 اسم المطور</label>
+                    <input type="text" id="ownerName" placeholder="اسم المطور">
+                </div>
+            </div>
+
+            <!-- أزرار المطورين -->
+            <div class="dev-buttons-section">
+                <a href="https://youtube.com/@stravex2025?si=bbJ-qK9rYJrOK1Dx" target="_blank" class="dev-btn-youtube">
+                    <i class="fab fa-youtube"></i> قناة المطور
+                </a>
+                <a href="https://t.me/stravex_oficiel" target="_blank" class="dev-btn-telegram">
+                    <i class="fab fa-telegram"></i> مجموعة المطور
+                </a>
+                <div class="section-title">━━━ 👥 مساعدين المطور ━━━</div>
+                <a href="https://t.me/ccxrii" target="_blank" class="helper-btn">
+                    <i class="fab fa-telegram"></i> 👤 CCXRII
+                </a>
+                <a href="https://t.me/aminantiban" target="_blank" class="helper-btn">
+                    <i class="fab fa-telegram"></i> 👤 AMIN ANTIBAN
+                </a>
+                <a href="https://t.me/ilyes_gamessss" target="_blank" class="helper-btn">
+                    <i class="fab fa-telegram"></i> 👤 ILYES GAMES
+                </a>
+            </div>
+
+            <div class="flex-between">
+                <button class="btn btn-primary" onclick="saveBotSettings()">
+                    <i class="fas fa-save"></i> حفظ
+                </button>
+                <button class="btn btn-primary" onclick="toggleBot()" id="toggleBtn">
+                    <i class="fas fa-play"></i> تشغيل
+                </button>
+            </div>
+            <div id="botMsg" style="margin-top: 8px; font-size: 0.7rem; color: #88aaff;"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let isPro = false;
+
+        function showMessage(msg, type) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `message message-${type}`;
+            msgDiv.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${msg}`;
+            document.body.appendChild(msgDiv);
+            setTimeout(() => msgDiv.remove(), 3000);
+        }
+
+        async function apiCall(endpoint, data = {}) {
+            try {
+                const res = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                return await res.json();
+            } catch(e) {
+                return null;
+            }
+        }
+
+        async function checkAuth() {
+            try {
+                const res = await fetch('/api/check-auth');
+                const data = await res.json();
+                if (!data.logged_in) {
+                    window.location.href = '/login';
+                    return false;
+                }
+                currentUser = data.username;
+                isPro = data.is_pro || false;
+                
+                const proDiv = document.getElementById('proContent');
+                if (isPro) {
+                    proDiv.innerHTML = `
+                        <div class="stat-row">
+                            <span class="stat-label">⭐ حالتك:</span>
+                            <span class="stat-value"><span class="pro-badge"><i class="fas fa-star"></i> PRO</span></span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">🎁 الصلاحية:</span>
+                            <span class="stat-value" id="proExpiry">غير محددة</span>
+                        </div>
+                    `;
+                } else {
+                    proDiv.innerHTML = `
+                        <div class="stat-row">
+                            <span class="stat-label">⭐ حالتك:</span>
+                            <span class="stat-value"><span class="status-badge status-warning"><i class="fas fa-gem"></i> مجاني</span></span>
+                        </div>
+                        <div class="input-group" style="margin-top:5px;">
+                            <input type="text" id="proKeyInput" placeholder="مفتاح PRO" style="padding:4px 8px; font-size:0.7rem;">
+                            <button class="btn-primary" style="width:100%; margin-top:4px; padding:4px; font-size:0.65rem;" onclick="upgradeWithKey()">تفعيل</button>
+                        </div>
+                    `;
+                }
+                await loadUserData();
+                await loadStats();
+                await loadLogs();
+                checkLikesAPI();
+                return true;
+            } catch(e) {
+                window.location.href = '/login';
+                return false;
+            }
+        }
+
+        async function upgradeWithKey() {
+            const key = document.getElementById('proKeyInput')?.value.trim();
+            if (!key) {
+                showMessage('الرجاء إدخال مفتاح PRO', 'error');
+                return;
+            }
+            const result = await apiCall('/api/upgrade-to-pro', { username: currentUser, code: key });
+            if (result && result.success) {
+                showMessage(result.message, 'success');
+                isPro = true;
+                checkAuth();
+            } else {
+                showMessage(result?.error || 'مفتاح غير صالح', 'error');
+            }
+        }
+
+        async function loadUserData() {
+            const data = await apiCall('/api/get-user-data', { username: currentUser });
+            if (data) {
+                document.getElementById('botToken').value = data.token || '';
+                document.getElementById('adminPassword').value = data.admin_password || 'X1R_RAGNAR';
+                document.getElementById('maxUsers').value = data.max_users || 100;
+                document.getElementById('activeUsersCount').innerText = data.active_users || 0;
+                document.getElementById('groupsCount').innerText = data.groups_count || 0;
+                
+                const statusEl = document.getElementById('botStatusText');
+                const toggleBtn = document.getElementById('toggleBtn');
+                
+                if (data.is_active) {
+                    statusEl.innerHTML = '<span class="status-badge status-online"><i class="fas fa-circle"></i> ONLINE</span>';
+                    toggleBtn.innerHTML = '<i class="fas fa-stop"></i> إيقاف';
+                } else {
+                    statusEl.innerHTML = '<span class="status-badge status-offline"><i class="fas fa-circle"></i> OFFLINE</span>';
+                    toggleBtn.innerHTML = '<i class="fas fa-play"></i> تشغيل';
+                }
+                
+                if (data.expiry_date && document.getElementById('proExpiry')) {
+                    document.getElementById('proExpiry').innerHTML = new Date(data.expiry_date).toLocaleDateString('ar');
+                }
+            }
+            
+            // تحميل بيانات المطور
+            const ownerData = await apiCall('/api/get-user-owner-info', { username: currentUser });
+            if (ownerData && ownerData.success) {
+                if (document.getElementById('ownerId')) document.getElementById('ownerId').value = ownerData.owner_id || '';
+                if (document.getElementById('ownerName')) document.getElementById('ownerName').value = ownerData.owner_name || '';
+            }
+        }
+
+        async function loadStats() {
+            const res = await apiCall('/api/admin/quickstats', {});
+            if (res && res.stats) {
+                document.getElementById('likesSentToday').innerText = res.stats.likes_today || 0;
+            }
+        }
+
+        async function loadLogs() {
+            try {
+                const res = await fetch(`/api/get-bot-logs?user=${currentUser}`);
+                const data = await res.json();
+                const logsList = document.getElementById('logsList');
+                if (data.logs && data.logs.length > 0) {
+                    logsList.innerHTML = data.logs.slice(-10).reverse().map(log => `
+                        <div class="log-item">
+                            <span class="log-time">${log.time || '●'}</span> 
+                            ${log.message}
+                        </div>
+                    `).join('');
+                } else {
+                    logsList.innerHTML = '<div class="log-item">📭 لا توجد سجلات</div>';
+                }
+            } catch(e) {
+                console.error('فشل جلب السجلات');
+            }
+        }
+
+        async function saveBotSettings() {
+            const token = document.getElementById('botToken').value.trim();
+            const adminPass = document.getElementById('adminPassword').value.trim();
+            const maxUsers = parseInt(document.getElementById('maxUsers').value);
+            const ownerId = document.getElementById('ownerId')?.value.trim() || '';
+            const ownerName = document.getElementById('ownerName')?.value.trim() || '';
+            
+            const result1 = await apiCall('/api/update-user-bot', {
+                username: currentUser,
+                token: token,
+                admin_password: adminPass,
+                max_users: maxUsers
+            });
+            
+            const result2 = await apiCall('/api/update-user-owner-info', {
+                username: currentUser,
+                owner_id: ownerId,
+                owner_name: ownerName
+            });
+            
+            if (result1 && result1.success && result2 && result2.success) {
+                showMessage('تم حفظ الإعدادات', 'success');
+                loadUserData();
+            } else {
+                showMessage('فشل الحفظ', 'error');
+            }
+        }
+
+        async function toggleBot() {
+            const result = await apiCall('/api/toggle-user-bot', { username: currentUser });
+            if (result && result.success) {
+                showMessage(`تم ${result.is_active ? 'تشغيل' : 'إيقاف'} البوت`, 'success');
+                loadUserData();
+            } else {
+                showMessage('فشل العملية', 'error');
+            }
+        }
+
+        async function checkLikesAPI() {
+            const statusSpan = document.getElementById('likesApiStatus');
+            try {
+                const res = await fetch('https://xct-like-x-team.up.railway.app');
+                const data = await res.json();
+                if (data && data.status === 'running') {
+                    statusSpan.innerHTML = '<span class="status-badge status-online">🟢 متصل</span>';
+                } else {
+                    statusSpan.innerHTML = '<span class="status-badge status-warning">⚠️ غير مستقر</span>';
+                }
+            } catch(e) {
+                statusSpan.innerHTML = '<span class="status-badge status-offline">🔴 غير متاح</span>';
+            }
+        }
+
+        async function sendLikes() {
+            if (!isPro) {
+                showMessage('⚠️ هذه الميزة متاحة فقط لمستخدمي PRO', 'error');
+                return;
+            }
+            const playerId = document.getElementById('playerId').value.trim();
+            if (!playerId) {
+                showMessage('الرجاء إدخال معرف اللاعب', 'error');
+                return;
+            }
+            
+            const btn = document.getElementById('sendLikesBtn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            btn.disabled = true;
+            
+            try {
+                const response = await fetch('https://xct-like-x-team.up.railway.app/send_likes', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ player_id: playerId, count: 10 })
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    showMessage(`✅ تم إرسال ${result.sent || 10} إعجاب`, 'success');
+                    document.getElementById('likesMsg').innerHTML = `<span style="color:#00ff88;">✅ ${new Date().toLocaleTimeString()}</span>`;
+                    loadStats();
+                    
+                    await fetch('/api/add-bot-log', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username: currentUser, message: `❤️ إرسال ${result.sent || 10} إعجاب إلى ${playerId}` })
+                    });
+                    loadLogs();
+                } else {
+                    showMessage('❌ فشل الإرسال', 'error');
+                }
+            } catch(e) {
+                showMessage('❌ خطأ في الاتصال', 'error');
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        async function logout() {
+            await fetch('/api/logout', { method: 'POST' });
+            window.location.href = '/login';
+        }
+
+        checkAuth();
+        setInterval(() => { if (isPro) checkLikesAPI(); }, 30000);
+        setInterval(loadStats, 15000);
+        setInterval(loadLogs, 10000);
+    </script>
+</body>
+</html>

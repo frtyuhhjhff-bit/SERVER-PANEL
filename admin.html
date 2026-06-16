@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STRAVEX - لوحة المسؤول</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #0a0a2a 0%, #0a2a3a 50%, #0a1a2a 100%);
+            font-family: 'Cairo', 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: twinkle 3s infinite;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 0.8; }
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: rgba(0, 20, 40, 0.7);
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 200, 0, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        h1 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, #ffcc00, #00aaff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .logout-btn {
+            background: linear-gradient(135deg, #ff4444, #cc0000);
+            padding: 10px 25px;
+            width: auto;
+            border-radius: 40px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+        }
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        .card {
+            background: rgba(0, 20, 40, 0.7);
+            backdrop-filter: blur(15px);
+            border-radius: 24px;
+            padding: 20px;
+            border: 1px solid rgba(255, 200, 0, 0.3);
+        }
+        .card h3 {
+            color: #ffdd55;
+            font-size: 1.2rem;
+            margin-bottom: 18px;
+            text-align: center;
+            border-bottom: 2px solid rgba(255, 200, 0, 0.3);
+            padding-bottom: 10px;
+        }
+        .owner-card {
+            border: 1px solid #ff6a00;
+            background: rgba(255, 106, 0, 0.1);
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(0, 20, 40, 0.8);
+            border: 1px solid #00aaff;
+            border-radius: 16px;
+            color: white;
+            font-size: 0.9rem;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #00aaff, #0088cc);
+            border: none;
+            border-radius: 40px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+        .danger-btn {
+            background: linear-gradient(135deg, #ff4444, #cc0000);
+            width: auto;
+            margin-top: 20px;
+        }
+        .stat {
+            display: flex;
+            justify-content: space-between;
+            background: rgba(0, 170, 255, 0.1);
+            padding: 10px 15px;
+            border-radius: 14px;
+            margin-bottom: 8px;
+            border-right: 3px solid #ffcc00;
+            color: #ccddff;
+        }
+        .keys-container {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+        .key-item {
+            background: rgba(0, 170, 255, 0.1);
+            padding: 8px 12px;
+            margin: 5px 0;
+            border-radius: 12px;
+            color: #ccddff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .delete-key {
+            background: #ff0000;
+            padding: 5px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .big-timer {
+            background: linear-gradient(135deg, rgba(0, 170, 255, 0.15), rgba(255, 200, 0, 0.1));
+            border: 2px solid #ffcc00;
+            border-radius: 30px;
+            padding: 25px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .timer-digits {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ffcc00;
+            font-family: monospace;
+            letter-spacing: 3px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            text-align: right;
+            border-bottom: 1px solid rgba(255, 200, 0, 0.2);
+        }
+        th {
+            color: #ffdd55;
+        }
+        .message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            border-radius: 12px;
+            z-index: 1000;
+        }
+        .success {
+            background: rgba(0, 212, 255, 0.2);
+            border: 1px solid #00d4ff;
+            color: #00d4ff;
+        }
+        .error {
+            background: rgba(255, 0, 0, 0.2);
+            border: 1px solid red;
+            color: red;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 200, 0, 0.2);
+            color: #88aaff;
+            font-size: 0.7rem;
+        }
+        @media (max-width: 700px) {
+            .cards-grid { grid-template-columns: 1fr; }
+            .header { flex-direction: column; gap: 15px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+
+    <div class="container">
+        <div class="header">
+            <h1>ADMIN PANEL</h1>
+            <button class="logout-btn" onclick="logout()">🚪 خروج</button>
+        </div>
+
+        <div class="big-timer">
+            <h3>⏰ صلاحية المالك</h3>
+            <div class="timer-digits" id="ownerCountdown">--:--:--:--</div>
+            <div class="timer-label">(أيام : ساعات : دقائق : ثواني)</div>
+        </div>
+
+        <div class="cards-grid">
+            <div class="card owner-card">
+                <h3>👑 معلومات المالك</h3>
+                <div class="input-group"><input type="text" id="ownerId" placeholder="أيدي المالك"></div>
+                <div class="input-group"><input type="text" id="ownerName" placeholder="اسم المالك"></div>
+                <button onclick="updateOwnerInfo()">💾 حفظ</button>
+            </div>
+
+            <div class="card owner-card">
+                <h3>🔑 إدارة مفاتيح PRO</h3>
+                <div class="stat"><span>المفاتيح المتبقية:</span><span id="keysCount">0</span></div>
+                <div class="stat"><span>إجمالي المفاتيح:</span><span id="totalKeys">0</span></div>
+                <div class="input-group">
+                    <label>مدة الصلاحية (أيام)</label>
+                    <select id="keyExpiryDays">
+                        <option value="1">يوم</option>
+                        <option value="7" selected>7 أيام</option>
+                        <option value="14">14 يوم</option>
+                        <option value="30">30 يوم</option>
+                        <option value="90">90 يوم</option>
+                    </select>
+                </div>
+                <button onclick="generateKey()">➕ إنشاء مفتاح PRO</button>
+                <button onclick="refreshKeys()">🔍 عرض الكل</button>
+                <div id="allKeysList" class="keys-container"></div>
+            </div>
+
+            <div class="card owner-card">
+                <h3>📝 رسائل البوت العامة</h3>
+                <div class="input-group"><textarea id="welcomeMessage" rows="3" placeholder="رسالة الترحيب"></textarea></div>
+                <div class="input-group"><textarea id="helpMessage" rows="3" placeholder="رسالة المساعدة"></textarea></div>
+                <button onclick="updateMessages()">💾 حفظ</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>📋 جميع المستخدمين</h3>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr><th>اسم المستخدم</th><th>الإصدار</th><th>البوت</th><th>الإجراءات</th></tr>
+                    </thead>
+                    <tbody id="usersList"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="footer">
+            👨‍💻 STRAVEX | تواصل: <strong>@STRAVEX_vib</strong>
+        </div>
+    </div>
+
+    <script>
+        function generateStars() {
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 150; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = Math.random() * 3 + 'px';
+                star.style.height = star.style.width;
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+        generateStars();
+
+        const ADMIN_SECRET_CODE = "STRAVEX2025";
+        let expiryInterval = null;
+
+        async function checkAuth() {
+            try {
+                const res = await fetch('/api/check-auth');
+                const data = await res.json();
+                if(!data.logged_in || !data.is_admin) {
+                    location.href = '/login';
+                }
+            } catch(e) {
+                location.href = '/login';
+            }
+        }
+
+        function showMessage(msg, type) {
+            const d = document.createElement('div');
+            d.className = `message ${type}`;
+            d.innerText = msg;
+            document.body.appendChild(d);
+            setTimeout(() => d.remove(), 3000);
+        }
+
+        async function apiCall(endpoint, data) {
+            const res = await fetch(endpoint, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            });
+            return res.json();
+        }
+
+        async function generateKey() {
+            const days = parseInt(document.getElementById('keyExpiryDays').value);
+            const newKey = `PRO-${Math.random().toString(36).substring(2, 10).toUpperCase()}-${Date.now()}`;
+            const res = await apiCall('/api/generate-pro-key', { key: newKey, expiry_days: days, admin_key: ADMIN_SECRET_CODE });
+            if(res.success) {
+                showMessage(`✅ تم إنشاء مفتاح PRO: ${newKey}`, 'success');
+                await refreshKeys();
+            } else {
+                showMessage(res.error || '❌ فشل', 'error');
+            }
+        }
+
+        async function deleteKey(key) {
+            if(confirm(`حذف المفتاح ${key}؟`)) {
+                const res = await apiCall('/api/delete-pro-key', { key: key, admin_key: ADMIN_SECRET_CODE });
+                if(res.success) {
+                    showMessage('✅ تم الحذف', 'success');
+                    await refreshKeys();
+                } else {
+                    showMessage(res.error || 'فشل الحذف', 'error');
+                }
+            }
+        }
+
+        async function updateOwnerInfo() {
+            const res = await apiCall('/api/update-owner-info', {
+                owner_id: document.getElementById('ownerId').value,
+                owner_name: document.getElementById('ownerName').value,
+                admin_key: ADMIN_SECRET_CODE
+            });
+            if(res.success) showMessage('✅ تم حفظ معلومات المالك', 'success');
+            else showMessage(res.error || 'فشل الحفظ', 'error');
+        }
+
+        async function updateMessages() {
+            const res = await apiCall('/api/update-messages', {
+                welcome_message: document.getElementById('welcomeMessage').value,
+                help_message: document.getElementById('helpMessage').value,
+                admin_key: ADMIN_SECRET_CODE
+            });
+            if(res.success) showMessage('✅ تم حفظ الرسائل العامة', 'success');
+            else showMessage(res.error || 'فشل الحفظ', 'error');
+        }
+
+        async function toggleUser(username, currentStatus) {
+            const res = await apiCall('/api/admin/toggle-user', { username, active: !currentStatus, admin_key: ADMIN_SECRET_CODE });
+            if(res.success) {
+                showMessage(`✅ تم ${!currentStatus ? 'تفعيل' : 'تعطيل'} المستخدم`, 'success');
+                await loadUsers();
+            } else {
+                showMessage(res.error || 'فشل', 'error');
+            }
+        }
+
+        async function togglePremium(username, currentPremium) {
+            const res = await apiCall('/api/admin/toggle-premium', { username, premium: !currentPremium, admin_key: ADMIN_SECRET_CODE });
+            if(res.success) {
+                showMessage(`✅ تم ${!currentPremium ? 'ترقية' : 'إزالة'} PRO عن المستخدم`, 'success');
+                await loadUsers();
+            } else {
+                showMessage(res.error || 'فشل', 'error');
+            }
+        }
+
+        async function refreshKeys() {
+            const keys = await apiCall('/api/get-all-pro-keys', { admin_key: ADMIN_SECRET_CODE });
+            document.getElementById('keysCount').innerText = keys.available_count || 0;
+            document.getElementById('totalKeys').innerText = keys.total || 0;
+            let html = '';
+            if(keys.keys && keys.keys.length > 0) {
+                keys.keys.forEach(k => {
+                    const status = k.used ? '✅ مستخدم' : '🟢 جديد';
+                    html += `<div class="key-item">🔑 ${k.key.substring(0, 35)}... (${status}) <span class="delete-key" onclick="deleteKey('${k.key}')">🗑️</span></div>`;
+                });
+            } else {
+                html = '<div class="key-item">لا توجد مفاتيح PRO</div>';
+            }
+            document.getElementById('allKeysList').innerHTML = html;
+        }
+
+        async function loadUsers() {
+            const res = await fetch('/api/admin/users');
+            const data = await res.json();
+            if(data.success && data.users) {
+                let html = '';
+                data.users.forEach(u => {
+                    html += `<tr>
+                        <td>${u.username}</td>
+                        <td>${u.is_pro ? '⭐ PRO' : '📖 مجاني'}</td>
+                        <td>${u.has_token ? '✅ مفعل' : '❌ غير مفعل'}</td>
+                        <td>
+                            <button onclick="toggleUser('${u.username}', ${u.active})" style="background:${u.active ? '#ff4444' : '#00aa44'}">${u.active ? 'تعطيل' : 'تفعيل'}</button>
+                            <button onclick="togglePremium('${u.username}', ${u.is_pro})" style="margin-top:5px;background:#ffcc00;color:#1a1a2a">${u.is_pro ? 'إزالة PRO' : 'ترقية PRO'}</button>
+                        </td>
+                    </tr>`;
+                });
+                document.getElementById('usersList').innerHTML = html;
+            }
+        }
+
+        async function loadOwnerInfo() {
+            const owner = await apiCall('/api/get-owner-info', {});
+            document.getElementById('ownerId').value = owner.owner_id || '';
+            document.getElementById('ownerName').value = owner.owner_name || '';
+            document.getElementById('welcomeMessage').value = owner.welcome_message || '';
+            document.getElementById('helpMessage').value = owner.help_message || '';
+        }
+
+        function startOwnerTimer() {
+            if(expiryInterval) clearInterval(expiryInterval);
+            function update() {
+                const countdownEl = document.getElementById('ownerCountdown');
+                if(countdownEl) countdownEl.innerHTML = `99:23:59:59`;
+            }
+            update();
+            expiryInterval = setInterval(update, 1000);
+        }
+
+        function logout() {
+            if(expiryInterval) clearInterval(expiryInterval);
+            fetch('/api/logout', { method: 'POST' }).then(() => location.href = '/login');
+        }
+
+        async function init() {
+            await checkAuth();
+            await loadOwnerInfo();
+            await refreshKeys();
+            await loadUsers();
+            startOwnerTimer();
+        }
+
+        init();
+    </script>
+</body>
+</html>
